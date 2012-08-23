@@ -1,8 +1,10 @@
 <?php
+namespace TYPO3\CMS\Filelist;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 1999-2011 Kasper Skårhøj (kasperYYYY@typo3.com)
+ *  (c) 2008 Steffen Kamper <info@sk-typo3.de>
  *  All rights reserved
  *
  *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,24 +27,23 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 /**
- * Web>File: File listing
+ * Interface for classes which hook into file list module and manipulateds edit icon array
  *
- * Revised for TYPO3 3.6 2/2003 by Kasper Skårhøj
- *
- * @author Kasper Skårhøj <kasperYYYY@typo3.com>
+ * @author Steffen Kamper <info@sk-typo3.de>
+ * @package TYPO3
+ * @subpackage cms
  */
-$LANG->includeLLFile('EXT:lang/locallang_mod_file_list.xml');
-$LANG->includeLLFile('EXT:lang/locallang_misc.xml');
-$BE_USER->modAccess($MCONF, 1);
-/*
- * @deprecated since 6.0, the classname SC_file_list and this file is obsolete
- * and will be removed by 7.0. The class was renamed and is now located at:
- * typo3/sysext/filelist/Classes/Controller/FileListController.php
- */
-require_once \TYPO3\CMS\Core\Extension\ExtensionManager::extPath('filelist') . 'Classes/Controller/FileListController.php';
-// Make instance:
-$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Filelist\\Controller\\FileListController');
-$SOBE->init();
-$SOBE->main();
-$SOBE->printContent();
+interface FileListEditIconHookInterface
+{
+	/**
+	 * Modifies edit icon array
+	 *
+	 * @param array $cells Array of edit icons
+	 * @param \TYPO3\CMS\Filelist\FileList $parentObject Parent object
+	 * @return void
+	 */
+	public function manipulateEditIcons(&$cells, &$parentObject);
+
+}
+
 ?>
