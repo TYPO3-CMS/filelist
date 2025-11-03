@@ -96,6 +96,6 @@ class CreateFolderBrowser extends AbstractResourceBrowser
             return $content;
         }
         $this->pageRenderer->setBodyContent('<body ' . $this->getBodyTagParameters() . '>' . $content);
-        return $this->pageRenderer->render();
+        return $this->pageRenderer->render($this->getRequest());
     }
 }
