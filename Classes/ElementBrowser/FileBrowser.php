@@ -65,16 +65,14 @@ class FileBrowser extends AbstractResourceBrowser
 
         $this->searchWord = trim((string)($request->getParsedBody()['searchTerm'] ?? $request->getQueryParams()['searchTerm'] ?? ''));
 
-        $fileExtensions = GeneralUtility::trimExplode('~', explode('|', $this->bparams)[3], true);
-        $allowed = preg_replace('/^allowed=/', '', $fileExtensions[0] ?? '', 1);
-        $disallowed = preg_replace('/^disallowed=/', '', $fileExtensions[1] ?? '', 1);
+        $fileExtensions = $this->browserParameters->getFileExtensions();
 
         $this->fileExtensionFilter = GeneralUtility::makeInstance(FileExtensionFilter::class);
-        if ($allowed !== '' && !str_contains($allowed, 'sys_file') && !str_contains($allowed, '*')) {
-            $this->fileExtensionFilter->setAllowedFileExtensions($allowed);
+        if ($fileExtensions['allowed'] !== []) {
+            $this->fileExtensionFilter->setAllowedFileExtensions(implode(',', $fileExtensions['allowed']));
         }
-        if ($disallowed !== '') {
-            $this->fileExtensionFilter->setDisallowedFileExtensions($disallowed);
+        if ($fileExtensions['disallowed'] !== []) {
+            $this->fileExtensionFilter->setDisallowedFileExtensions(implode(',', $fileExtensions['disallowed']));
         }
 
         $this->resourceDisplayMatcher = GeneralUtility::makeInstance(Matcher::class);

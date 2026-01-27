@@ -225,11 +225,16 @@ abstract class AbstractResourceBrowser extends AbstractElementBrowser implements
      */
     public function getUrlParameters(array $values): array
     {
-        $values = array_replace_recursive([
-            'mode' => $this->identifier,
-            'expandFolder' => $values['identifier'] ?? $this->expandFolder,
-            'bparams' => $this->bparams,
-        ], $values);
+        $values = array_replace_recursive(
+            array_merge(
+                [
+                    'mode' => $this->identifier,
+                    'expandFolder' => $values['identifier'] ?? $this->expandFolder,
+                ],
+                $this->browserParameters->toQueryParameters()
+            ),
+            $values
+        );
 
         return array_filter($values, static function ($value) {
             return $value !== null && trim((string)$value) !== '';

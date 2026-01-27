@@ -1522,8 +1522,10 @@ class FileList
         if ($mode = $parsedBody['mode'] ?? $queryParams['mode'] ?? null) {
             $baseParams['mode'] = $mode;
         }
-        if ($bparams = $parsedBody['bparams'] ?? $queryParams['bparams'] ?? null) {
-            $baseParams['bparams'] = $bparams;
+        foreach (['fieldReference', 'allowedTypes', 'disallowedFileExtensions', 'irreObjectId'] as $paramName) {
+            if ($value = $parsedBody[$paramName] ?? $queryParams[$paramName] ?? null) {
+                $baseParams[$paramName] = $value;
+            }
         }
 
         // Keep LinkHandler Settings
