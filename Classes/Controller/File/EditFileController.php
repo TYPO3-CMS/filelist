@@ -22,7 +22,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use TYPO3\CMS\Backend\Attribute\AsController;
-use TYPO3\CMS\Backend\Form\FormResultCompiler;
+use TYPO3\CMS\Backend\Form\FormResultFactory;
+use TYPO3\CMS\Backend\Form\FormResultHandler;
 use TYPO3\CMS\Backend\Form\NodeFactory;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\Components\ButtonBar;
@@ -105,6 +106,8 @@ class EditFileController
         protected readonly EventDispatcherInterface $eventDispatcher,
         protected readonly NodeFactory $nodeFactory,
         protected readonly ComponentFactory $componentFactory,
+        protected readonly FormResultFactory $formResultFactory,
+        protected readonly FormResultHandler $formResultHandler,
     ) {}
 
     /**
@@ -160,15 +163,14 @@ class EditFileController
         )->getFormData();
 
         $resultArray = $this->nodeFactory->create($formData)->render();
-        $formResultCompiler = GeneralUtility::makeInstance(FormResultCompiler::class);
-        $formResultCompiler->mergeResult($resultArray);
+        $formResult = $this->formResultFactory->create($resultArray);
 
+        $this->formResultHandler->addAssets($formResult);
         // Rendering of the output via fluid and PageRenderer
-        $formResultCompiler->addCssFiles();
         $view->assignMultiple([
             'moduleUrlTceFile' => (string)$this->uriBuilder->buildUriFromRoute('tce_file'),
             'fileName' => $file->getName(),
-            'form' => ($resultArray['html'] ?? '') . $formResultCompiler->printNeededJSFunctions(),
+            'form' => ($formResult->html ?? '') . implode(LF, $formResult->hiddenFieldsHtml),
         ]);
         $content = $view->render('File/EditFile');
 
