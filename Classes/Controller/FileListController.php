@@ -593,6 +593,7 @@ class FileListController implements LoggerAwareInterface
 
         $viewModeButton = $this->componentFactory->createDropDownButton()
             ->setLabel($lang->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.view'))
+            ->setIcon($this->iconFactory->getIcon('actions-cog'))
             ->setShowLabelText(true);
         foreach ($viewModeItems as $viewModeItem) {
             $viewModeButton->addItem($viewModeItem);

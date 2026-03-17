@@ -338,7 +338,8 @@ abstract class AbstractResourceLinkHandler implements LinkHandlerInterface, Link
         }
 
         $viewModeButton = $this->componentFactory->createDropDownButton()
-            ->setLabel($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.view'));
+            ->setLabel($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.view'))
+            ->setIcon($this->iconFactory->getIcon('actions-cog'));
         foreach ($viewModeItems as $viewModeItem) {
             $viewModeButton->addItem($viewModeItem);
         }
