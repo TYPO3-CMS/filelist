@@ -263,7 +263,17 @@ class FileList
 
     public function setColumnsToRender(array $additionalFields = []): void
     {
-        $this->fieldArray = array_unique(array_merge($this->fieldArray, $additionalFields));
+        // Passed fields might have fields utilized that are no longer / not yet part of TCA Schema.
+        // For example, EXT:filemetadata might not be available, so fields that this extension provide
+        // must only be allowed when the extension is active.
+        $allowedAdditionalFields = [];
+        foreach ($additionalFields as $field) {
+            if (!$this->tcaSchemaFactory->get('sys_file')->hasField($field)) {
+                continue;
+            }
+            $allowedAdditionalFields[] = $field;
+        }
+        $this->fieldArray = array_unique(array_merge($this->fieldArray, $allowedAdditionalFields));
     }
 
     /**
